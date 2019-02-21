@@ -20,5 +20,6 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "qq_app_id": "101521485"
 }
