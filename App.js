@@ -7,28 +7,9 @@
  * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
-}
+import React from 'react';
+import {StyleSheet, Text, View, Button, Alert} from 'react-native';
+import * as QQ from 'react-native-qqsdk';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,10 +22,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
+
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      userId: 'USER_ID'
+    }
+
+    this.setState = this.setState.bind(this);
+    this.login = this.login.bind(this);
+  }
+
+  async login () {
+    try {
+      const result = await QQ.ssoLogin();
+      const { userid, access_token, expires_time } = result;
+      this.setState({ userId: userid });
+    } catch (e) {
+      Alert.alert(e.message);
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>Hello World!</Text>
+        <Text style={styles.welcome}>{this.state.userId}</Text>
+        <Button
+          onPress={this.login}
+          title="QQ Login"
+        />
+      </View>
+    );
+  }
+}
+
+export default App;
